@@ -22,6 +22,8 @@ class HotelGuest extends Model {
   @Column
   reserveDate: Date;
   @Column
+  checkoutDate: Date;
+  @Column
   lastUpdated: Date;
   @BelongsTo(() => Hotel)
   hotel: Hotel;
