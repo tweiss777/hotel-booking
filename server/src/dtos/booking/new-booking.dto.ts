@@ -1,4 +1,4 @@
-export class NewBookingDTO{
+export default class NewBookingDTO{
     id: string;
     hotelId: string;
     guestId: string;

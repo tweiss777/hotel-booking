@@ -1,4 +1,4 @@
-export class BookingDTO { 
+export default class BookingDTO { 
        id: string;
        reserveDate: Date;
        checkoutDate:Date;
