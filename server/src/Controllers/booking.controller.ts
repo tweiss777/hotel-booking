@@ -87,7 +87,27 @@ export class BookingController {
           },
         ],
       });
-      res.status(200).send({ booking }).end();
+
+      if (!booking) {
+        res.status(404).send({ booking: null }).end();
+        return;
+      }
+      const bookingDTO: BookingDTO = {
+        id: booking?.id,
+        reserveDate: booking?.reserveDate,
+        checkoutDate: booking?.checkoutDate,
+        lastUpdated: booking?.lastUpdated,
+        guestId: booking?.guestId,
+        hotelId: booking?.hotelId,
+        hotel: {
+          name: booking?.hotel?.name,
+        },
+        guest: {
+          firstName: booking?.guest?.firstName,
+          lastName: booking?.guest?.lastName,
+        },
+      };
+      res.status(200).send({ booking: bookingDTO }).end();
     } catch (err) {
       next(err);
     }
