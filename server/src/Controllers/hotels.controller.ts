@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import Hotel from "../Models/Hotel.Model";
 import NewHotelDTO from "../dtos/hotels/new-hotel.dto";
-import { GetHotelDTO } from "../dtos/hotels/get-hotel.dto";
+import GetHotelDTO from "../dtos/hotels/get-hotel.dto";
 export class HotelsController {
   private readonly hotels: typeof Hotel;
   private readonly uuid: () => string;

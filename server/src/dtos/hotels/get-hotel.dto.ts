@@ -1,4 +1,4 @@
-export class GetHotelDTO{
+export default class GetHotelDTO{
      id: string;
      name: string;
      rating: number;
