@@ -3,7 +3,8 @@ import HotelGuest from "../Models/HotelGuest.model";
 import dayjs from "dayjs";
 import Guest from "../Models/Guest.model";
 import Hotel from "../Models/Hotel.Model";
-import sequelize from "sequelize";
+import BookingDTO from "../dtos/booking/booking.dto";
+import NewBookingDTO from "../dtos/booking/new-booking.dto";
 export class BookingController {
   private readonly hotelGuest: typeof HotelGuest;
   private readonly uuid: () => string;
@@ -15,7 +16,7 @@ export class BookingController {
 
   getBookings = async (_req: Request, res: Response, next: NextFunction) => {
     try {
-      const booking = await this.hotelGuest.findAll({
+      const bookings = await this.hotelGuest.findAll({
         attributes: [
           "id",
           "reserveDate",
@@ -23,9 +24,6 @@ export class BookingController {
           "lastUpdated",
           "guestId",
           "hotelId",
-          [sequelize.col("hotel.name"), "hotelName"],
-          [sequelize.col("guest.firstName"), "firstName"],
-          [sequelize.col("guest.lastName"), "lastName"],
         ],
         include: [
           {
@@ -40,7 +38,24 @@ export class BookingController {
           },
         ],
       });
-      res.status(200).send({ booking }).end();
+
+      const bookingsDto: BookingDTO[] = bookings.map((booking) => ({
+        id: booking?.id,
+        reserveDate: booking?.reserveDate,
+        checkoutDate: booking?.checkoutDate,
+        lastUpdated: booking?.lastUpdated,
+        guestId: booking?.guestId,
+        hotelId: booking?.hotelId,
+        hotel: {
+          name: booking?.hotel?.name,
+        },
+        guest: {
+          firstName: booking?.guest?.firstName,
+          lastName: booking?.guest?.lastName,
+        },
+      }));
+
+      res.status(200).send({ booking: bookingsDto }).end();
     } catch (err) {
       next(err);
     }
@@ -57,9 +72,6 @@ export class BookingController {
           "lastUpdated",
           "guestId",
           "hotelId",
-          [sequelize.col("hotel.name"), "hotelName"],
-          [sequelize.col("guest.firstName"), "firstName"],
-          [sequelize.col("guest.lastName"), "lastName"],
         ],
         where: { id: booking_id },
         include: [
@@ -75,7 +87,27 @@ export class BookingController {
           },
         ],
       });
-      res.status(200).send({ booking }).end();
+
+      if (!booking) {
+        res.status(404).send({ booking: null }).end();
+        return;
+      }
+      const bookingDTO: BookingDTO = {
+        id: booking?.id,
+        reserveDate: booking?.reserveDate,
+        checkoutDate: booking?.checkoutDate,
+        lastUpdated: booking?.lastUpdated,
+        guestId: booking?.guestId,
+        hotelId: booking?.hotelId,
+        hotel: {
+          name: booking?.hotel?.name,
+        },
+        guest: {
+          firstName: booking?.guest?.firstName,
+          lastName: booking?.guest?.lastName,
+        },
+      };
+      res.status(200).send({ booking: bookingDTO }).end();
     } catch (err) {
       next(err);
     }
@@ -96,9 +128,6 @@ export class BookingController {
           "lastUpdated",
           "guestId",
           "hotelId",
-          [sequelize.col("hotel.name"), "hotelName"],
-          [sequelize.col("guest.firstName"), "firstName"],
-          [sequelize.col("guest.lastName"), "lastName"],
         ],
         where: { guestId: guest_id },
         include: [
@@ -114,7 +143,22 @@ export class BookingController {
           },
         ],
       });
-      res.status(200).send({ bookings }).end();
+      const bookingDto: BookingDTO[] = bookings.map((booking) => ({
+        id: booking?.id,
+        reserveDate: booking?.reserveDate,
+        checkoutDate: booking?.checkoutDate,
+        lastUpdated: booking?.lastUpdated,
+        guestId: booking?.guestId,
+        hotelId: booking?.hotelId,
+        hotel: {
+          name: booking?.hotel?.name,
+        },
+        guest: {
+          firstName: booking?.guest?.firstName,
+          lastName: booking?.guest?.lastName,
+        },
+      }));
+      res.status(200).send({ bookings: bookingDto }).end();
     } catch (err) {
       next(err);
     }
@@ -124,7 +168,7 @@ export class BookingController {
     try {
       const reserveDate = dayjs(req.body.reserve_date);
       const checkoutDate = dayjs(req.body.checkout_date);
-      // convert to dto
+
       const newBooking = {
         id: this.uuid(),
         hotelId: req.body.hotel_id,
@@ -136,7 +180,15 @@ export class BookingController {
 
       const booking = await this.hotelGuest.create(newBooking);
 
-      res.status(201).send({ booking }).end();
+      const newBookingDto: NewBookingDTO = {
+        id: booking.id,
+        hotelId: booking.hotelId,
+        guestId: booking.guestId,
+        reserveDate: booking.reserveDate,
+        checkoutDate: booking.checkoutDate,
+      };
+
+      res.status(201).send({ booking: newBookingDto }).end();
     } catch (error) {
       next(error);
     }

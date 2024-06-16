@@ -1,5 +1,5 @@
 export default class NewGuestDto {
-    id: string;
+  id: string;
   firstName: string;
   lastName: string;
   address: string;
