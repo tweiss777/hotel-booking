@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import Guest from "../Models/Guest.model";
-import CreateGuestDto from "../dtos/create-guest.dto";
-import GuestDto from "../dtos/guest.dto";
-import NewGuestDto from "../dtos/new-guest.dto";
+import CreateGuestDto from "../dtos/guests/create-guest.dto";
+import GuestDto from "../dtos/guests/guest.dto";
+import NewGuestDto from "../dtos/guests/new-guest.dto";
 export class GuestController {
   private readonly guest: typeof Guest;
   private readonly uuid: () => string;

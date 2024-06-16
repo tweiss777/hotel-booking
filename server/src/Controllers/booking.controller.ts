@@ -3,8 +3,8 @@ import HotelGuest from "../Models/HotelGuest.model";
 import dayjs from "dayjs";
 import Guest from "../Models/Guest.model";
 import Hotel from "../Models/Hotel.Model";
-import { BookingDTO } from "../dtos/booking.dto";
-import { NewBookingDTO } from "../dtos/new-booking.dto";
+import { BookingDTO } from "../dtos/booking/booking.dto";
+import { NewBookingDTO } from "../dtos/booking/new-booking.dto";
 export class BookingController {
   private readonly hotelGuest: typeof HotelGuest;
   private readonly uuid: () => string;
