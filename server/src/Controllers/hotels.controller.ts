@@ -1,18 +1,20 @@
 import { Request, Response, NextFunction } from "express";
-import Hotel from "../Models/Hotel.Model";
 import NewHotelDTO from "../dtos/hotels/new-hotel.dto";
 import GetHotelDTO from "../dtos/hotels/get-hotel.dto";
+import HotelRepository from "../Repositories/Hotel.repository";
 export class HotelsController {
-  private readonly hotels: typeof Hotel;
   private readonly uuid: () => string;
-
-  constructor(hotels: typeof Hotel, uuid: () => string) {
-    this.hotels = hotels;
+  private readonly hotelRepository: HotelRepository;
+  constructor(
+    hotelRepository: HotelRepository,
+    uuid: () => string,
+  ) {
     this.uuid = uuid;
+    this.hotelRepository = hotelRepository;
   }
   getHotels = async (_req: Request, res: Response, next: NextFunction) => {
     try {
-      const hotels = await this.hotels.findAll();
+      const hotels = await this.hotelRepository.GetHotels();
       if (!hotels.length) {
         res.send({ hotels: [] }).end();
         return;
@@ -32,15 +34,22 @@ export class HotelsController {
 
   createHotel = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { name, address, rating } = req.body;
+      const { name, address } = req.body;
       const id = this.uuid();
-      const hotel = await this.hotels.create({ id, name, address, rating });
-      const newHotel: NewHotelDTO = {
+      const newHotel = {
+        id,
+        name,
+        address,
+        rating: 100,
+      };
+
+      const hotel = await this.hotelRepository.CreateHotel(newHotel);
+      const newHotelDto: NewHotelDTO = {
         id: hotel?.id,
         name: hotel?.name,
         address: hotel?.address,
       };
-      res.status(201).send({ hotel: newHotel }).end();
+      res.status(201).send({ hotel: newHotelDto }).end();
     } catch (err) {
       next(err);
     }
@@ -49,7 +58,7 @@ export class HotelsController {
   getHotel = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id: hotelId } = req.params;
-      const hotel = await this.hotels.findOne({ where: { id: hotelId } });
+        const hotel = await this.hotelRepository.GetHotel(hotelId);
       if (!hotel) {
         res.status(404).send({ hotel: null }).end();
         return;

@@ -1,20 +1,22 @@
 import { Request, Response, NextFunction } from "express";
-import Guest from "../Models/Guest.model";
 import CreateGuestDto from "../dtos/guests/create-guest.dto";
 import GuestDto from "../dtos/guests/guest.dto";
 import NewGuestDto from "../dtos/guests/new-guest.dto";
+import GuestRepository from "../Repositories/Guest.repository";
 export class GuestController {
-  private readonly guest: typeof Guest;
   private readonly uuid: () => string;
-
-  constructor(guest: typeof Guest, uuid: () => string) {
+  private readonly guestRepository: GuestRepository;
+  constructor(
+    guestRepository: GuestRepository,
+    uuid: () => string,
+  ) {
     this.uuid = uuid;
-    this.guest = guest;
+    this.guestRepository = guestRepository;
   }
 
   getGuests = async (_req: Request, res: Response, next: NextFunction) => {
     try {
-      const guests = await this.guest.findAll();
+      const guests = await this.guestRepository.GetGuests();
       if (guests.length) {
         const guestsDto: GuestDto[] = guests.map((guest) => ({
           id: guest?.id,
@@ -34,7 +36,7 @@ export class GuestController {
   getGuest = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id: guestId } = req.params;
-      const guest = await this.guest.findOne({ where: { id: guestId } });
+      const guest = await this.guestRepository.GetGuest(guestId);
       if (guest) {
         const guestDto: GuestDto = {
           id: guest?.id,
@@ -58,7 +60,7 @@ export class GuestController {
     try {
       const { firstName, lastName, address }: CreateGuestDto = req.body;
       const id = this.uuid();
-      const guest = await this.guest.create({
+      const guest = await this.guestRepository.CreateGuest({
         id,
         firstName,
         lastName,
@@ -71,6 +73,7 @@ export class GuestController {
         lastName: guest?.lastName,
         address: guest?.address,
       };
+
       response.status(201).send({ guest: newGuest }).end();
     } catch (err) {
       next(err);
