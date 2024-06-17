@@ -1,12 +1,15 @@
 import express from "express";
-const router = express.Router();
 import { BookingController } from "../Controllers/booking.controller";
 import HotelGuest from "../Models/HotelGuest.model";
 import { v4 } from "uuid";
-const hotelGuestModel = HotelGuest;
+import BookingRepository from "../Repositories/Booking.repository";
+import Hotel from "../Models/Hotel.Model";
+import Guest from "../Models/Guest.model";
 
 
-const bc = new BookingController(hotelGuestModel, v4);
+const router = express.Router();
+
+const bc = new BookingController(new BookingRepository(HotelGuest, Hotel, Guest), v4);
 
 
 router.route('/:booking_id').get(bc.getBooking)

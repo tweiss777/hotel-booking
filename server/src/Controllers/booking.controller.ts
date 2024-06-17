@@ -1,44 +1,20 @@
 import { Request, Response, NextFunction } from "express";
-import HotelGuest from "../Models/HotelGuest.model";
 import dayjs from "dayjs";
-import Guest from "../Models/Guest.model";
-import Hotel from "../Models/Hotel.Model";
 import BookingDTO from "../dtos/booking/booking.dto";
 import NewBookingDTO from "../dtos/booking/new-booking.dto";
+import BookingRepository from "../Repositories/Booking.repository";
 export class BookingController {
-  private readonly hotelGuest: typeof HotelGuest;
+  private readonly bookingRepository: BookingRepository;
   private readonly uuid: () => string;
 
-  constructor(hotelGuest: typeof HotelGuest, uuid: () => string) {
+  constructor(bookingRepository: BookingRepository, uuid: () => string) {
     this.uuid = uuid;
-    this.hotelGuest = hotelGuest;
+    this.bookingRepository = bookingRepository;
   }
 
   getBookings = async (_req: Request, res: Response, next: NextFunction) => {
     try {
-      const bookings = await this.hotelGuest.findAll({
-        attributes: [
-          "id",
-          "reserveDate",
-          "checkoutDate",
-          "lastUpdated",
-          "guestId",
-          "hotelId",
-        ],
-        include: [
-          {
-            model: Hotel,
-            as: "hotel",
-            attributes: ["name"],
-          },
-          {
-            model: Guest,
-            as: "guest",
-            attributes: ["firstName", "lastName"],
-          },
-        ],
-      });
-
+      const bookings = await this.bookingRepository.GetBookings() 
       const bookingsDto: BookingDTO[] = bookings.map((booking) => ({
         id: booking?.id,
         reserveDate: booking?.reserveDate,
@@ -64,30 +40,7 @@ export class BookingController {
   getBooking = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { booking_id } = req.params;
-      const booking = await this.hotelGuest.findOne({
-        attributes: [
-          "id",
-          "reserveDate",
-          "checkoutDate",
-          "lastUpdated",
-          "guestId",
-          "hotelId",
-        ],
-        where: { id: booking_id },
-        include: [
-          {
-            model: Hotel,
-            as: "hotel",
-            attributes: ["name"],
-          },
-          {
-            model: Guest,
-            as: "guest",
-            attributes: ["firstName", "lastName"],
-          },
-        ],
-      });
-
+      const booking = await this.bookingRepository.GetBooking(booking_id); 
       if (!booking) {
         res.status(404).send({ booking: null }).end();
         return;
@@ -120,29 +73,7 @@ export class BookingController {
   ) => {
     try {
       const { guest_id } = req.params;
-      const bookings = await this.hotelGuest.findAll({
-        attributes: [
-          "id",
-          "reserveDate",
-          "checkoutDate",
-          "lastUpdated",
-          "guestId",
-          "hotelId",
-        ],
-        where: { guestId: guest_id },
-        include: [
-          {
-            model: Hotel,
-            as: "hotel",
-            attributes: ["name"],
-          },
-          {
-            model: Guest,
-            as: "guest",
-            attributes: ["firstName", "lastName"],
-          },
-        ],
-      });
+      const bookings = await this.bookingRepository.GetBookingsByUser(guest_id);
       const bookingDto: BookingDTO[] = bookings.map((booking) => ({
         id: booking?.id,
         reserveDate: booking?.reserveDate,
@@ -178,7 +109,7 @@ export class BookingController {
         checkoutDate: checkoutDate.format("YYYY-MM-DD HH:mm:ss"),
       };
 
-      const booking = await this.hotelGuest.create(newBooking);
+      const booking = await this.bookingRepository.CreateBooking(newBooking) 
 
       const newBookingDto: NewBookingDTO = {
         id: booking.id,

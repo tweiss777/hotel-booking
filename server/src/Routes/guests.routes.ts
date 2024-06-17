@@ -2,10 +2,10 @@ import express from "express";
 import { GuestController } from "../Controllers/guests.controller";
 import Guest from "../Models/Guest.model";
 import { v4 } from "uuid";
+import GuestRepository from "../Repositories/Guest.repository";
 
 const router = express.Router();
-const guestModel = Guest
-const gc = new GuestController(guestModel, v4)
+const gc = new GuestController(new GuestRepository(Guest), v4)
 
 router.route("/").get(gc.getGuests);
 router.route("/").post(gc.createGuest);
