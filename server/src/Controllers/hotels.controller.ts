@@ -2,15 +2,14 @@ import { Request, Response, NextFunction } from "express";
 import NewHotelDTO from "../dtos/hotels/new-hotel.dto";
 import GetHotelDTO from "../dtos/hotels/get-hotel.dto";
 import HotelRepository from "../Repositories/Hotel.repository";
+import { ValidateSchema } from "../Validations/Validation.decorator";
 export class HotelsController {
   private readonly uuid: () => string;
   private readonly hotelRepository: HotelRepository;
-  constructor(
-    hotelRepository: HotelRepository,
-    uuid: () => string,
-  ) {
+  constructor(hotelRepository: HotelRepository, uuid: () => string) {
     this.uuid = uuid;
     this.hotelRepository = hotelRepository;
+    this.createHotel = this.createHotel.bind(this);
   }
   getHotels = async (_req: Request, res: Response, next: NextFunction) => {
     try {
@@ -32,7 +31,8 @@ export class HotelsController {
     }
   };
 
-  createHotel = async (req: Request, res: Response, next: NextFunction) => {
+  @ValidateSchema("Hotel")
+  async createHotel(req: Request, res: Response, next: NextFunction) {
     try {
       const { name, address } = req.body;
       const id = this.uuid();
@@ -53,12 +53,12 @@ export class HotelsController {
     } catch (err) {
       next(err);
     }
-  };
+  }
 
   getHotel = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id: hotelId } = req.params;
-        const hotel = await this.hotelRepository.GetHotel(hotelId);
+      const hotel = await this.hotelRepository.GetHotel(hotelId);
       if (!hotel) {
         res.status(404).send({ hotel: null }).end();
         return;

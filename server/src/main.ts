@@ -6,12 +6,27 @@ import hotelRouter from "./Routes/hotels.routes";
 import bookingRouter from "./Routes/booking.route";
 import SequelizeSingleTon from "./Models/Sequelize.singleton";
 import { Sequelize } from "sequelize";
+import SchemaMap from "./Validations/SchemaMap";
+import { GuestSchema } from "./Validations/Guest/Guest.schema";
+import { HotelSchema } from "./Validations/Hotel/Hotel.schema";
+import AjvInstance from "./Validations/AjvInstance";
+
+AjvInstance.AjvInstance.instance.addKeyword("notEmpty", {
+    keyword: "notEmpty",
+    validate: (_flag: boolean, data: string) => {
+        return typeof data === "string" && data.trim().length > 0;
+    },
+    errors: true,
+})
 
 SequelizeSingleTon.SequelizeInstance.set({
   host: process.env.DB_HOST as string,
   dbName: process.env.DB_NAME as string,
   username: process.env.DB_USER as string,
 });
+
+SchemaMap.SchemaMapInstance.instance.addSchema("Guest", GuestSchema);
+SchemaMap.SchemaMapInstance.instance.addSchema("Hotel", HotelSchema);
 
 const sequelize = SequelizeSingleTon.SequelizeInstance.instance as Sequelize;
 (async () => {

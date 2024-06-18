@@ -3,15 +3,14 @@ import CreateGuestDto from "../dtos/guests/create-guest.dto";
 import GuestDto from "../dtos/guests/guest.dto";
 import NewGuestDto from "../dtos/guests/new-guest.dto";
 import GuestRepository from "../Repositories/Guest.repository";
+import { ValidateSchema } from "../Validations/Validation.decorator";
 export class GuestController {
   private readonly uuid: () => string;
   private readonly guestRepository: GuestRepository;
-  constructor(
-    guestRepository: GuestRepository,
-    uuid: () => string,
-  ) {
+  constructor(guestRepository: GuestRepository, uuid: () => string) {
     this.uuid = uuid;
     this.guestRepository = guestRepository;
+    this.createGuest = this.createGuest.bind(this);
   }
 
   getGuests = async (_req: Request, res: Response, next: NextFunction) => {
@@ -52,11 +51,8 @@ export class GuestController {
       next(err);
     }
   };
-  createGuest = async (
-    req: Request,
-    response: Response,
-    next: NextFunction,
-  ) => {
+  @ValidateSchema("Guest")
+  async createGuest(req: Request, response: Response, next: NextFunction) {
     try {
       const { firstName, lastName, address }: CreateGuestDto = req.body;
       const id = this.uuid();
@@ -78,5 +74,5 @@ export class GuestController {
     } catch (err) {
       next(err);
     }
-  };
+  }
 }
