@@ -3,6 +3,7 @@ import { Sequelize } from "sequelize-typescript";
 import Hotel from "./Hotel.Model";
 import Guest from "./Guest.model";
 import HotelGuest from "./HotelGuest.model";
+import User from "./User.model";
 
 class InstanceCreatedError extends Error {
     constructor(msg: string) {
@@ -31,7 +32,7 @@ export default class SequelizeSingleTon {
                     host: config.host,
                     database: config.dbName,
                     dialect: "mysql",
-                    models: [Hotel, Guest, HotelGuest],
+                    models: [Hotel, Guest, HotelGuest, User],
                 });
             } else {
                 throw new InstanceCreatedError("Instance already created.");
