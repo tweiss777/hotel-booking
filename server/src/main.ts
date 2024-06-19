@@ -4,6 +4,7 @@ import cors from "cors";
 import guestRouter from "./Routes/guests.routes";
 import hotelRouter from "./Routes/hotels.routes";
 import bookingRouter from "./Routes/booking.route";
+import authRouter from "./Routes/auth.routes";
 import SequelizeSingleTon from "./Models/Sequelize.singleton";
 import { Sequelize } from "sequelize";
 import SchemaMap from "./Validations/SchemaMap";
@@ -42,9 +43,12 @@ const port = process.env.PORT as unknown as number;
 const app = express();
 app.use(express.json());
 app.use(cors());
+
 app.use("/api/v1/guests", guestRouter);
 app.use("/api/v1/hotels", hotelRouter);
 app.use("/api/v1/bookings", bookingRouter);
+app.use("/api/v1/auth", authRouter);
+
 
 app.listen(port, () => {
   console.log(`App listening on port ${port}`);
