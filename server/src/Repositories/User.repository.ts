@@ -33,9 +33,9 @@ export default class UserRepository {
         }
     }
 
-    public async GetUser({ email, password }): Promise<User | null> {
+    public async GetUser({ email }): Promise<User | null> {
         try {
-            return await this.user.findOne({ where: { email, password } });
+            return await this.user.findOne({ where: { email } });
         } catch (error) {
             throw error;
         }
