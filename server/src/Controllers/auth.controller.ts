@@ -21,15 +21,25 @@ export default class AuthController {
 
     async Login(req: Request, res: Response, next: NextFunction) {
         try {
+
+            if(!req.body.email || !req.body.password){
+                res.status(400).send({ error: "email and password are required" }).end();
+                return;
+            }
+
             const loginDto: LoginDto = {
                 email: req.body.email,
                 password: req.body.password,
             };
+
             const user = await this.userRepo.GetUser(loginDto);
+
             if (!user || user.password !== loginDto.password) {
                 res.status(404).send({ error: "invalid username or password" });
                 return 
             }
+
+
             const token = this.GenerateToken(user);
             res.status(200).send({ token });  
         } catch (error) {
@@ -37,13 +47,18 @@ export default class AuthController {
         }
     }
 
-    @ValidateSchema("NewUser")
+    @ValidateSchema("User")
     async Register(req: Request, res: Response, next: NextFunction) {
         try {
             let newUserDto: NewUserDTO = {
                 email: req.body.email,
                 password: req.body.password,
+                confirmPassword: req.body.confirmPassword,
             };
+            if(newUserDto.password !== newUserDto.confirmPassword){
+                res.status(400).send({ error: "passwords do not match" }).end();
+                return
+            }
             const existingUser = await this.userRepo.GetUser({
                 email: newUserDto.email,
             });
@@ -51,7 +66,8 @@ export default class AuthController {
                 res.status(409).send({ error: "user already exists" });
             }
             const user = await this.userRepo.CreateUser({
-                ...newUserDto,
+                email: newUserDto.email,
+                password: newUserDto.password,
                 id: this.uuid(),
                 role: Role.User,
             });

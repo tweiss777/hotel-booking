@@ -1,3 +1,4 @@
-import NewUserDTO from "./NewUser.dto";
-
-export class LoginDto extends NewUserDTO { }
+export class LoginDto {
+    email: string;
+    password: string;
+}

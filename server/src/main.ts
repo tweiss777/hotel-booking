@@ -11,6 +11,7 @@ import SchemaMap from "./Validations/SchemaMap";
 import { GuestSchema } from "./Validations/Guest/Guest.schema";
 import { HotelSchema } from "./Validations/Hotel/Hotel.schema";
 import AjvInstance from "./Validations/AjvInstance";
+import { UserSchema } from "./Validations/User/User.schema";
 
 AjvInstance.AjvInstance.instance.addKeyword("notEmpty", {
     keyword: "notEmpty",
@@ -28,7 +29,7 @@ SequelizeSingleTon.SequelizeInstance.set({
 
 SchemaMap.SchemaMapInstance.instance.addSchema("Guest", GuestSchema);
 SchemaMap.SchemaMapInstance.instance.addSchema("Hotel", HotelSchema);
-
+SchemaMap.SchemaMapInstance.instance.addSchema("User", UserSchema);
 const sequelize = SequelizeSingleTon.SequelizeInstance.instance as Sequelize;
 (async () => {
   try {
