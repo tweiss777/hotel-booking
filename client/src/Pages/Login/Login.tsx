@@ -1,30 +1,43 @@
-import { Card } from 'antd';
 import LoginForm from './Components/LoginForm';
 import './styles.scss';
 import '../../scss/grid.scss';
 import { useAppSelector } from '../../hooks/redux.hooks';
+import LoginHeader from './Components/LoginHeader';
+import { useState } from 'react';
+import { login } from '../../Services/Login/login.service';
+import ClientForbiddenException from '../../Errors/ClientForbidden.exception';
 export default function Login() {
-	const width = useAppSelector((state) => state.dimension.width);
-	function handleSubmit(loginForm: { email: string; password: string }) {
-		console.log(loginForm);
-	}
-	return (
-		<div className="login-container">
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
+    const width = useAppSelector((state) => state.dimension.width);
 
-            {/*Modularize divs into components*/}
-			<div className="login-header">
-				<h1 style={{ color: '#FFF455' }}>Hotels.com</h1>
-			</div>
-			<div className="custom-card-container">
-				<Card title="Login" bordered>
-					<LoginForm handleSubmit={handleSubmit} />
-				</Card>
-			</div>
-			{width > 750 && <div className="login-background justify-center">
-                   {/*conver style to css class*/} 
-                    <h2 className="login-background-header">Let your journey start here</h2>
-                    
-            </div>}
-		</div>
-	);
+    async function handleSubmit(loginForm: { email: string; password: string }) {
+        try {
+            if (error) setError(null);
+            setIsLoading(true);
+            const result = await login(loginForm.email, loginForm.password);
+            // todo store the jwt in cookies or in localstorage
+        } catch (error) {
+            if (error instanceof ClientForbiddenException) {
+                setError(error.message);
+                return;
+            }
+            setError('Internal server error... :(');
+        } finally {
+            setIsLoading(false);
+        }
+    }
+    return (
+        <div className="login-container">
+            <LoginHeader />
+            <div className="custom-card-container">
+                <LoginForm
+                    error={error}
+                    loading={isLoading}
+                    handleSubmit={handleSubmit}
+                />
+            </div>
+            {width > 750 && <BackgroundHeader />}
+        </div>
+    );
 }
