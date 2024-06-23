@@ -6,6 +6,7 @@ import LoginHeader from './Components/LoginHeader';
 import { useState } from 'react';
 import { login } from '../../Services/Login/login.service';
 import ClientForbiddenException from '../../Errors/ClientForbidden.exception';
+import BackgroundHeader from './Components/BackgroundHeader';
 export default function Login() {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
