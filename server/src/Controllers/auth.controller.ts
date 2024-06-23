@@ -35,7 +35,7 @@ export default class AuthController {
             const user = await this.userRepo.GetUser(loginDto);
 
             if (!user || user.password !== loginDto.password) {
-                res.status(404).send({ error: "invalid username or password" });
+                res.status(401).send({ error: "invalid username or password" });
                 return 
             }
 
