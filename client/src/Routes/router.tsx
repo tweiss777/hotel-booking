@@ -1,23 +1,30 @@
-import  React,{ createRef } from "react";
-import App from "../App";
-import { createBrowserRouter } from "react-router-dom";
+import React, { createRef } from 'react';
+import App from '../App';
+import Login from '../Pages/Login/Login';
+import { createBrowserRouter } from 'react-router-dom';
 export const routes = [
-  {
-    path: "/",
-    element: <h1>test element</h1>,
-    name: "About",
-    nodeRef: createRef(),
-  },
+	{
+		path: '/',
+		element: <h1>test element</h1>,
+		name: 'Home',
+		nodeRef: createRef(),
+	},
+	{
+		path: '/login',
+		name: 'Login',
+		element: <Login />,
+		nodeRef: createRef(),
+	},
 ];
 
 export const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <App />,
-    children: routes.map((route) => ({
-      index: route.path === "/",
-      path: route.path === "/" ? undefined : route.path,
-      element: route.element,
-    })),
-  },
+	{
+		path: '/',
+		element: <App />,
+		children: routes.map((route) => ({
+			index: route.path === '/',
+			path: route.path === '/' ? undefined : route.path,
+			element: route.element,
+		})),
+	},
 ]);
