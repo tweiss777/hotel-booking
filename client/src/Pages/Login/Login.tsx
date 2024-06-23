@@ -10,6 +10,8 @@ export default function Login() {
 	}
 	return (
 		<div className="login-container">
+
+            {/*Modularize divs into components*/}
 			<div className="login-header">
 				<h1 style={{ color: '#FFF455' }}>Hotels.com</h1>
 			</div>
@@ -19,8 +21,8 @@ export default function Login() {
 				</Card>
 			</div>
 			{width > 750 && <div className="login-background justify-center">
-                    
-                    <h2 style={{opacity: 0.77, background: '#EEEEEE', float: 'right', color: '#000', fontSize: '3.5rem', padding: '20px' }}>Let your journey start here</h2>
+                   {/*conver style to css class*/} 
+                    <h2 className="login-background-header">Let your journey start here</h2>
                     
             </div>}
 		</div>
