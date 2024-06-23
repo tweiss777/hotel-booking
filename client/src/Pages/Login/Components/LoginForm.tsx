@@ -49,7 +49,7 @@ export default function LoginForm({ error, loading, handleSubmit }: IProps) {
                     <Input type="password" value={loginForm.password} />
                 </Form.Item>
                 <Form.Item>
-                    <Button loading={loading} type="primary" htmlType="submit">
+                    <Button className='login-btn' loading={loading} type="primary" htmlType="submit">
                         Login
                     </Button>
                 </Form.Item>
