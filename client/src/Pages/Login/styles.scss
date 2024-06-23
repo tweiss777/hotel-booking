@@ -11,6 +11,7 @@
     height: 100vh;
     flex-basis: 60%;
     background: url('https://static.independent.co.uk/s3fs-public/thumbnails/image/2019/02/19/16/budapest-1.jpg');
+    opacity: 0.5;
     background-size: cover;
 }
 
@@ -37,10 +38,20 @@
     position: absolute;
 }
 
+.login-background-header {
+    opacity: 0.8;
+    background: #eeeeee;
+    float: right;
+    color: #000;
+    font-size: 3.5rem;
+    padding: 20px;
+}
+
 @media screen and (max-width: 750px) {
-    .login-header{
+    .login-header {
         top: 0;
     }
+
     .login-container {
         @include column;
         @include justify-center;
@@ -50,7 +61,7 @@
     .custom-card-container {
         padding: 0;
         transform: translateY(0);
-        width: 90%
+        width: 90%;
     }
 
     .login-header {
