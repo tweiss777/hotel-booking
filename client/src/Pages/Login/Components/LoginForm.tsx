@@ -5,7 +5,7 @@ interface IProps {
 	loading?: boolean;
 	handleSubmit: (credentials: { email: string; password: string }) => void;
 }
-export default function LoginForm({ handleSubmit }: IProps) {
+export default function LoginForm({ loading, handleSubmit }: IProps) {
 	const [loginForm, setLoginForm] = useState({ email: '', password: '' });
 	function onSubmt() {
 		handleSubmit(loginForm);
@@ -45,7 +45,7 @@ export default function LoginForm({ handleSubmit }: IProps) {
 				<Input type="password" value={loginForm.password} />
 			</Form.Item>
 			<Form.Item>
-				<Button type="primary" htmlType="submit">
+				<Button loading={loading} type="primary" htmlType="submit">
 					Login
 				</Button>
 			</Form.Item>
