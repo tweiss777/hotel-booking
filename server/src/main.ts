@@ -1,4 +1,5 @@
 import "dotenv/config";
+import path from "path";
 import express from "express";
 import cors from "cors";
 import guestRouter from "./Routes/guests.routes";
@@ -42,6 +43,7 @@ const sequelize = SequelizeSingleTon.SequelizeInstance.instance as Sequelize;
 })();
 const port = process.env.PORT as unknown as number;
 const app = express();
+app.use(express.static(path.join(__dirname, '../../client/dist')))
 app.use(express.json());
 app.use(cors());
 
@@ -49,6 +51,9 @@ app.use("/api/v1/guests", guestRouter);
 app.use("/api/v1/hotels", hotelRouter);
 app.use("/api/v1/bookings", bookingRouter);
 app.use("/api/v1/auth", authRouter);
+app.get("/*", (_req, res) => {
+    res.sendFile(path.join(__dirname, '../../client/dist/index.html'))
+})
 
 
 app.listen(port, () => {

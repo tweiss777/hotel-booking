@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import './App.css';
 import { Outlet } from 'react-router';
 import { useAppDispatch } from './hooks/redux.hooks';

@@ -17,6 +17,7 @@ export default function Login() {
             if (error) setError(null);
             setIsLoading(true);
             const result = await login(loginForm.email, loginForm.password);
+            console.log(result);
             // todo store the jwt in cookies or in localstorage
         } catch (error) {
             if (error instanceof ClientForbiddenException) {
