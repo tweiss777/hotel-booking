@@ -7,11 +7,12 @@ import { useState } from 'react';
 import { login } from '../../Services/Login/login.service';
 import ClientForbiddenException from '../../Errors/ClientForbidden.exception';
 import BackgroundHeader from './Components/BackgroundHeader';
+import { useLocation } from 'react-router';
 export default function Login() {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
     const width = useAppSelector((state) => state.dimension.width);
-
+    const { pathname } = useLocation();
     async function handleSubmit(loginForm: { email: string; password: string }) {
         try {
             if (error) setError(null);
@@ -33,11 +34,15 @@ export default function Login() {
         <div className="login-container">
             <LoginHeader />
             <div className="custom-card-container">
-                <LoginForm
-                    error={error}
-                    loading={isLoading}
-                    handleSubmit={handleSubmit}
-                />
+                {pathname.toLowerCase() === '/register' ? (
+                    <h1> registration form</h1>
+                ) : (
+                    <LoginForm
+                        error={error}
+                        loading={isLoading}
+                        handleSubmit={handleSubmit}
+                    />
+                )}
             </div>
             {width > 750 && <BackgroundHeader />}
         </div>
