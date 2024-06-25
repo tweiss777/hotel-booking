@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { login } from '../../Services/Login/login.service';
 import ClientForbiddenException from '../../Errors/ClientForbidden.exception';
 import BackgroundHeader from './Components/BackgroundHeader';
+import RegistrationForm from './Components/RegistrationForm';
 import { useLocation } from 'react-router';
 export default function Login() {
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -30,12 +31,20 @@ export default function Login() {
             setIsLoading(false);
         }
     }
+
+    async function handleRegistration(registrationForm) {
+        throw new Error('not implemented');
+    }
     return (
         <div className="login-container">
             <LoginHeader />
             <div className="custom-card-container">
                 {pathname.toLowerCase() === '/register' ? (
-                    <h1> registration form</h1>
+                    <RegistrationForm
+                        loading={isLoading}
+                        error={error}
+                        handleRegistration={handleRegistration}
+                    />
                 ) : (
                     <LoginForm
                         error={error}
