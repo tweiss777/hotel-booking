@@ -1,6 +1,7 @@
 import { Card, Input, Button, Form, Alert } from 'antd';
 import { Link } from 'react-router-dom';
 import { useForm, Controller } from 'react-hook-form';
+import { useState } from 'react';
 interface IProps {
 	loading?: boolean;
 	error?: string[] | string | null;
@@ -18,6 +19,7 @@ export default function RegistrationForm({
 	error,
 	handleRegistration,
 }: IProps) {
+	const [passwordsMatch, setPasswordsMatch] = useState<boolean>(true);
 	const {
 		handleSubmit,
 		control,
@@ -33,12 +35,23 @@ export default function RegistrationForm({
 
 	function onRegistration() {
 		const values: INewUser = getValues();
+		if (!passwordsMatch) setPasswordsMatch(true);
+		const { password, confirmPassword } = values;
+		console.log(password);
+		console.log(confirmPassword);
+		if (password !== confirmPassword) {
+			setPasswordsMatch(false);
+			return;
+		}
 		handleRegistration(values);
 	}
 
 	return (
 		<Card bordered title="Register">
-			<Alert message={error} type="error" showIcon />
+			{error && <Alert message={error} type="error" showIcon />}
+			{!passwordsMatch && (
+				<Alert message="Passwords do not match" type="error" showIcon />
+			)}
 			<Form layout="vertical" onFinish={handleSubmit(onRegistration)}>
 				<Controller
 					control={control}
@@ -46,7 +59,7 @@ export default function RegistrationForm({
 					rules={{
 						required: true,
 						pattern: {
-							value: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$/,
+							value: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
 							message: 'Invalid email',
 						},
 					}}
@@ -88,7 +101,7 @@ export default function RegistrationForm({
 					rules={{
 						required: {
 							value: true,
-							message: 'Password is required',
+							message: 'Confirm password is required',
 						},
 					}}
 					render={({ field }) => (
