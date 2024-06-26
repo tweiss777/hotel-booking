@@ -51,6 +51,12 @@
     background-color: #003b95;
 }
 
+.text-error {
+    color: #ff0000;
+    margin: 0;
+    transform: translateY(-25px);
+}
+
 @media screen and (max-width: 750px) {
     .login-header {
         top: 0;
