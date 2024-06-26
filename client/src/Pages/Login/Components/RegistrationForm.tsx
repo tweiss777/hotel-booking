@@ -37,8 +37,6 @@ export default function RegistrationForm({
 		const values: INewUser = getValues();
 		if (!passwordsMatch) setPasswordsMatch(true);
 		const { password, confirmPassword } = values;
-		console.log(password);
-		console.log(confirmPassword);
 		if (password !== confirmPassword) {
 			setPasswordsMatch(false);
 			return;
