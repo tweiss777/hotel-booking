@@ -37,6 +37,8 @@ export default function Login() {
 
     async function handleRegistration(registrationForm: INewUser) {
         try {
+            if (error) setError(null);
+            setIsLoading(true);
             const { email, password, confirmPassword } = registrationForm;
             const result = await register(email, password, confirmPassword);
             console.log(result);
@@ -50,6 +52,8 @@ export default function Login() {
                 return;
             }
             setError('Internal server error... :(');
+        } finally {
+            setIsLoading(false);
         }
     }
     return (
