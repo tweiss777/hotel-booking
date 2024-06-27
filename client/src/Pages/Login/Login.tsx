@@ -4,14 +4,17 @@ import '../../scss/grid.scss';
 import { useAppSelector } from '../../hooks/redux.hooks';
 import LoginHeader from './Components/LoginHeader';
 import { useState } from 'react';
-import { login } from '../../Services/Login/login.service';
+import { login, register } from '../../Services/Login/login.service';
 import ClientForbiddenException from '../../Errors/ClientForbidden.exception';
 import BackgroundHeader from './Components/BackgroundHeader';
 import RegistrationForm from './Components/RegistrationForm';
 import { useLocation } from 'react-router';
+import BadRequestException from '../../Errors/BadRequest.exception';
+import ConflictException from '../../Errors/Conflict.exception';
+import { INewUser } from '../../Interfaces/INewUser';
 export default function Login() {
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [error, setError] = useState<string | null>(null);
+    const [error, setError] = useState<string[] | string | null>(null);
     const width = useAppSelector((state) => state.dimension.width);
     const { pathname } = useLocation();
     async function handleSubmit(loginForm: { email: string; password: string }) {
@@ -32,8 +35,22 @@ export default function Login() {
         }
     }
 
-    async function handleRegistration(registrationForm) {
-        throw new Error('not implemented');
+    async function handleRegistration(registrationForm: INewUser) {
+        try {
+            const { email, password, confirmPassword } = registrationForm;
+            const result = await register(email, password, confirmPassword);
+            console.log(result);
+            // todo store the jwt in either localstorage or cookie
+        } catch (error: any) {
+            if (
+                error instanceof BadRequestException ||
+                error instanceof ConflictException
+            ) {
+                setError(error.message.split(','));
+                return;
+            }
+            setError('Internal server error... :(');
+        }
     }
     return (
         <div className="login-container">
