@@ -32,7 +32,7 @@ export async function register(
 	} catch (error: any) {
 		if (error.response) {
 			if (error.response.status === 409) {
-				throw new ConfictException(error.response.data.error);
+				throw new ConfictException(error.response.data.errors);
 			}
 			if (error.response.status === 400) {
 				throw new BadRequestException(error.response.data.errors);
