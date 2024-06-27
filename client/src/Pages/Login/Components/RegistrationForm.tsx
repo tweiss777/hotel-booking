@@ -2,17 +2,14 @@ import { Card, Input, Button, Form, Alert } from 'antd';
 import { Link } from 'react-router-dom';
 import { useForm, Controller } from 'react-hook-form';
 import { useState } from 'react';
+import { INewUser } from '../../../Interfaces/INewUser';
 interface IProps {
 	loading?: boolean;
 	error?: string[] | string | null;
 	handleRegistration: (credentials: INewUser) => void;
 }
 
-interface INewUser {
-	email: string;
-	password: string;
-	confirmPassword: string;
-}
+
 
 export default function RegistrationForm({
 	loading,
@@ -46,7 +43,12 @@ export default function RegistrationForm({
 
 	return (
 		<Card bordered title="Register">
-			{error && <Alert message={error} type="error" showIcon />}
+			{error && <Alert description={
+                <ul>
+                    {error instanceof Array? error.map((error: string, i: number) => <li key={i}>{error}</li>): error}
+                </ul>
+
+            } message={'Error'} type="error" showIcon />}
 			{!passwordsMatch && (
 				<Alert message="Passwords do not match" type="error" showIcon />
 			)}
