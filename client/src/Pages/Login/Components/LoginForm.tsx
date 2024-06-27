@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useState } from 'react';
 interface IProps {
     loading?: boolean;
-    error?: string | null;
+    error?: string [] | string | null;
     handleSubmit: (credentials: { email: string; password: string }) => void;
 }
 export default function LoginForm({ error, loading, handleSubmit }: IProps) {

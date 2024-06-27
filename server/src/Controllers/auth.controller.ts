@@ -56,14 +56,15 @@ export default class AuthController {
                 confirmPassword: req.body.confirmPassword,
             };
             if(newUserDto.password !== newUserDto.confirmPassword){
-                res.status(400).send({ error: "passwords do not match" }).end();
+                res.status(400).send({ errors: ["passwords do not match" ]}).end();
                 return
             }
             const existingUser = await this.userRepo.GetUser({
                 email: newUserDto.email,
             });
             if (existingUser) {
-                res.status(409).send({ error: "user already exists" });
+                res.status(409).send({ errors: ["user already exists"]}).end();
+                return;
             }
             const user = await this.userRepo.CreateUser({
                 email: newUserDto.email,
