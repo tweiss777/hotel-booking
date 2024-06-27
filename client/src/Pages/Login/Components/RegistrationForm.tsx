@@ -9,8 +9,6 @@ interface IProps {
 	handleRegistration: (credentials: INewUser) => void;
 }
 
-
-
 export default function RegistrationForm({
 	loading,
 	error,
@@ -43,12 +41,22 @@ export default function RegistrationForm({
 
 	return (
 		<Card bordered title="Register">
-			{error && <Alert description={
-                <ul>
-                    {error instanceof Array? error.map((error: string, i: number) => <li key={i}>{error}</li>): error}
-                </ul>
-
-            } message={'Error'} type="error" showIcon />}
+			{error && (
+				<Alert
+					description={
+						<ul>
+							{error instanceof Array
+								? error.map((error: string, i: number) => (
+										<li key={i}>{error}</li>
+									))
+								: error}
+						</ul>
+					}
+					message={'Error'}
+					type="error"
+					showIcon
+				/>
+			)}
 			{!passwordsMatch && (
 				<Alert message="Passwords do not match" type="error" showIcon />
 			)}
@@ -57,7 +65,10 @@ export default function RegistrationForm({
 					control={control}
 					name="email"
 					rules={{
-						required: true,
+						required: {
+							value: true,
+							message: 'Email is required',
+						},
 						pattern: {
 							value: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
 							message: 'Invalid email',
