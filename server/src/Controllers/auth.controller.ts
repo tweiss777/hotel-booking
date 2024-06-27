@@ -63,7 +63,8 @@ export default class AuthController {
                 email: newUserDto.email,
             });
             if (existingUser) {
-                res.status(409).send({ errors: ["user already exists"]});
+                res.status(409).send({ errors: ["user already exists"]}).end();
+                return;
             }
             const user = await this.userRepo.CreateUser({
                 email: newUserDto.email,
