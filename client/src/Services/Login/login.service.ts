@@ -1,7 +1,7 @@
 import axios from 'axios';
 import ConfictException from '../../Errors/Conflict.exception';
 import BadRequestException from '../../Errors/BadRequest.exception';
-import ClientForbiddenException from '../../Errors/ClientForbidden.exception';
+import UnauthorizedException from '../../Errors/Unauthorized.exception';
 export async function login(email: string, password: string) {
 	try {
 		const { data } = await axios.post('/api/v1/auth/login', {
@@ -11,7 +11,7 @@ export async function login(email: string, password: string) {
 		return data;
 	} catch (error: any) {
 		if (error.response && error.response.status === 401) {
-			throw new ClientForbiddenException(error.response.data.errors);
+			throw new UnauthorizedException(error.response.data.errors);
 		}
 		throw new Error('Something Went wrong');
 	}
