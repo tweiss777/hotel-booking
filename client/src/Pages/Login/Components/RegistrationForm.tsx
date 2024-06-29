@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { INewUser } from '../../../Interfaces/INewUser';
 interface IProps {
 	loading?: boolean;
-	error?: string[] | string | null;
+	error?: string[] | null;
 	handleRegistration: (credentials: INewUser) => void;
 }
 

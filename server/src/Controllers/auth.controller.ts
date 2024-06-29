@@ -21,9 +21,11 @@ export default class AuthController {
 
     async Login(req: Request, res: Response, next: NextFunction) {
         try {
-
-            if(!req.body.email || !req.body.password){
-                res.status(400).send({ error: "email and password are required" }).end();
+            if (!req.body.email || !req.body.password) {
+                res
+                    .status(400)
+                    .send({ errors: ["email and password are required"] })
+                    .end();
                 return;
             }
 
@@ -35,13 +37,15 @@ export default class AuthController {
             const user = await this.userRepo.GetUser(loginDto);
 
             if (!user || user.password !== loginDto.password) {
-                res.status(401).send({ error: "invalid username or password" });
-                return 
+                res
+                    .status(401)
+                    .send({ errors: ["invalid username or password"] })
+                    .end();
+                return;
             }
 
-
             const token = this.GenerateToken(user);
-            res.status(200).send({ token });  
+            res.status(200).send({ token });
         } catch (error) {
             next(error);
         }
@@ -55,15 +59,21 @@ export default class AuthController {
                 password: req.body.password,
                 confirmPassword: req.body.confirmPassword,
             };
-            if(newUserDto.password !== newUserDto.confirmPassword){
-                res.status(400).send({ errors: ["passwords do not match" ]}).end();
-                return
+            if (newUserDto.password !== newUserDto.confirmPassword) {
+                res
+                    .status(400)
+                    .send({ errors: ["passwords do not match"] })
+                    .end();
+                return;
             }
             const existingUser = await this.userRepo.GetUser({
                 email: newUserDto.email,
             });
             if (existingUser) {
-                res.status(409).send({ errors: ["user already exists"]}).end();
+                res
+                    .status(409)
+                    .send({ errors: ["user already exists"] })
+                    .end();
                 return;
             }
             const user = await this.userRepo.CreateUser({
@@ -98,7 +108,7 @@ export default class AuthController {
         const token = sign(
             { email: user?.email, role },
             process.env.JWT_SECRET as string,
-            { expiresIn: "1h" }
+            { expiresIn: "1h" },
         );
         return token;
     }
