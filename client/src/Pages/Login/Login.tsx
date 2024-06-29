@@ -5,16 +5,16 @@ import { useAppSelector } from '../../hooks/redux.hooks';
 import LoginHeader from './Components/LoginHeader';
 import { useState } from 'react';
 import { login, register } from '../../Services/Login/login.service';
-import ClientForbiddenException from '../../Errors/ClientForbidden.exception';
 import BackgroundHeader from './Components/BackgroundHeader';
 import RegistrationForm from './Components/RegistrationForm';
 import { useLocation } from 'react-router';
 import BadRequestException from '../../Errors/BadRequest.exception';
 import ConflictException from '../../Errors/Conflict.exception';
 import { INewUser } from '../../Interfaces/INewUser';
+import UnauthorizedException from '../../Errors/Unauthorized.exception';
 export default function Login() {
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [error, setError] = useState<string[] | string | null>(null);
+    const [error, setError] = useState<string[]|  null>(null);
     const width = useAppSelector((state) => state.dimension.width);
     const { pathname } = useLocation();
     async function handleSubmit(loginForm: { email: string; password: string }) {
@@ -24,12 +24,12 @@ export default function Login() {
             const result = await login(loginForm.email, loginForm.password);
             console.log(result);
             // todo store the jwt in cookies or in localstorage
-        } catch (error) {
-            if (error instanceof ClientForbiddenException) {
-                setError(error.message);
+        } catch (error: any) {
+            if (error instanceof UnauthorizedException) {
+                setError(error.message.split(','));
                 return;
             }
-            setError('Internal server error... :(');
+            setError(['Internal server error... :(']);
         } finally {
             setIsLoading(false);
         }
@@ -51,7 +51,7 @@ export default function Login() {
                 setError(error.message.split(','));
                 return;
             }
-            setError('Internal server error... :(');
+            setError(['Internal server error... :(']);
         } finally {
             setIsLoading(false);
         }
