@@ -12,7 +12,6 @@ declare module "jwt-decode" {
 
 }
 
-// Define the parameter and return types
 type RegisterParams = {
   email: string;
   password: string;
