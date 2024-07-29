@@ -30,7 +30,7 @@ type LoginParams = {
 };
 
 
-const registerUser = createAsyncThunk<
+export const registerUser = createAsyncThunk<
   Response,
   RegisterParams,
   { rejectValue: string[] }
@@ -50,7 +50,7 @@ const registerUser = createAsyncThunk<
   }
 );
 
-const loginUser = createAsyncThunk<
+export const loginUser = createAsyncThunk<
   Response,
   LoginParams,
   { rejectValue: string[] }
@@ -58,7 +58,6 @@ const loginUser = createAsyncThunk<
   try {
     const { token } = await login(email, password);
     const decodedJwt = jwtDecode<JwtPayload>(token);
-    console.log('decodedJwt', decodedJwt);
     return { token, tokenPayload: decodedJwt };
   } catch (error: any) {
     if (error instanceof UnauthorizedException) {
@@ -68,4 +67,3 @@ const loginUser = createAsyncThunk<
   }
 });
 
-export { registerUser, loginUser };

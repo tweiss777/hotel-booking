@@ -5,14 +5,14 @@ type Auth = {
 	loading: boolean;
 	userToken: string | null;
 	userData: JwtPayload | undefined;
-	errors: string[];
+	errors: string[] | null;
 	success: boolean;
 };
 
 const initialState: Auth = {
 	loading: false,
 	userToken: null,
-	errors: [],
+	errors: null,
 	success: false,
 	userData: undefined,
 };
@@ -23,7 +23,7 @@ const authSlice = createSlice({
 	reducers: {},
 	extraReducers(builder) {
 		builder.addCase(loginUser.pending, (state) => {
-			state.errors = [];
+			state.errors = null;
 			state.loading = true;
 		});
 		builder.addCase(loginUser.fulfilled, (state, action) => {
@@ -37,7 +37,7 @@ const authSlice = createSlice({
 			state.errors = action.payload as string[];
 		});
 		builder.addCase(registerUser.pending, (state) => {
-			state.errors = [];
+			state.errors = null;
 			state.loading = true;
 		});
 		builder.addCase(registerUser.fulfilled, (state, action) => {
