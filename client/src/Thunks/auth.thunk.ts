@@ -20,6 +20,12 @@ type RegisterParams = {
 	confirmPassword: string;
 };
 
+type Response = {
+    token: string,
+    tokenPayload: JwtPayload
+}
+
+
 type LoginParams = {
 	email: string;
 	password: string;
@@ -50,15 +56,15 @@ const registerUser = createAsyncThunk<
 );
 
 const loginUser = createAsyncThunk<
-	JwtPayload | undefined,
+	Response,
 	LoginParams,
 	{ rejectValue: string[] }
 >('api/login', async ({ email, password }, { rejectWithValue }) => {
 	try {
 		const { token } = await login(email, password);
 		const decodedJwt: JwtPayload = jwtDecode(token);
-        
-        return decodedJwt ;
+         
+        return {tokenPayload :decodedJwt, token} ;
 	} catch (error: any) {
 		if (error instanceof UnauthorizedException) {
 			rejectWithValue(error.message.split(','));
