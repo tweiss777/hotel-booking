@@ -4,7 +4,7 @@ import { JwtPayload } from 'jwt-decode';
 type Auth = {
 	loading: boolean;
 	userToken: string | null;
-	userData: JwtPayload | undefined;
+	userData: JwtPayload | null;
 	errors: string[] | null;
 	success: boolean;
 };
@@ -14,7 +14,7 @@ const initialState: Auth = {
 	userToken: null,
 	errors: null,
 	success: false,
-	userData: undefined,
+	userData: null,
 };
 
 const authSlice = createSlice({
