@@ -21,11 +21,11 @@ const authSlice = createSlice({
 	name: 'auth',
 	initialState,
 	reducers: {
-        setUserToken(state, action){
-            state.userToken = action.payload.token
+        setUserToken(state,{ payload }){
+            state.userToken = payload
         },
-        setTokenPayload(state, action){
-            state.userData = action.payload.tokenPayload
+        setTokenPayload(state,{ payload }){
+            state.userData = payload
         }
     },
 	extraReducers(builder) {
