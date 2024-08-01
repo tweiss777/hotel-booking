@@ -3,6 +3,8 @@ import './App.css';
 import { Outlet } from 'react-router';
 import { useAppDispatch } from './hooks/redux.hooks';
 import { setWidth, setHeight } from './Slices/dimension.slice';
+import { setTokenPayload, setUserToken } from './Slices/auth.slice';
+import { jwtDecode } from 'jwt-decode';
 
 function App() {
 	const dispatch = useAppDispatch();
@@ -15,6 +17,12 @@ function App() {
 	}
 
 	useEffect(() => {
+		const token = localStorage.getItem('token');
+		if (token) {
+			const tokenPayload = jwtDecode(token);
+			dispatch(setUserToken(token));
+			dispatch(setTokenPayload(tokenPayload));
+		}
 		window.addEventListener('resize', setAppHeight);
 		window.addEventListener('resize', setAppWidth);
 
@@ -29,7 +37,6 @@ function App() {
 			<Outlet />
 		</div>
 	);
-
 }
 
 export default App;
