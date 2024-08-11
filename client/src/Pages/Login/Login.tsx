@@ -20,8 +20,7 @@ export default function Login() {
     useEffect(() => {
         if(userToken !== null){
             localStorage.setItem('token', userToken);
-            // mock redirect -> change to dashboard page
-            navigate('/');
+            navigate('/dashboard');
         }
     }, [userToken]);
 

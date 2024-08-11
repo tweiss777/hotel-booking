@@ -21,6 +21,11 @@ export const routes = [
 		element: <Login />,
 		nodeRef: createRef(),
 	},
+    {
+        path: '/dashboard',
+        name: 'Dashboard',
+        nodeRef: createRef()
+    }
 ];
 
 export const router = createBrowserRouter([
