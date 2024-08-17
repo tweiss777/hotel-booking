@@ -1,0 +1,14 @@
+@import '../../../scss/grid.scss';
+
+.hotel-img{
+    width: 200px;
+    height: 200px;
+    border-radius: 5px;
+}
+
+.listings{
+   margin: 0px 4%; 
+    @include column;
+    gap: 10px;
+}
+
